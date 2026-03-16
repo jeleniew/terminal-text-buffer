@@ -1,8 +1,6 @@
-enum class StyleFlag {
-    BOLD,
-    ITALIC,
-    UNDERLINE,
-}
+package org.example.model
+
+import org.example.model.StyleFlag
 
 class CharacterCell(
     val char: Char = ' ',
