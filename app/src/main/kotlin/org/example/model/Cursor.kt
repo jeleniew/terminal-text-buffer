@@ -3,6 +3,8 @@ package org.example.model
 class Cursor(
     var column: Int = 0,
     var row: Int = 0,
+    private val maxColumns: Int,
+    private val maxRows: Int
 ) {
     fun getPostion(): Pair<Int, Int> {
         return Pair(column, row)
@@ -14,18 +16,22 @@ class Cursor(
     }
 
     fun moveUp() {
-        row--
+        if (row > 0)
+            row--
     }
 
     fun moveDown() {
-        row++
+        if (row < maxRows - 1)
+            row++
     }
 
     fun moveLeft() {
-        column--
+        if (column > 0)
+            column--
     }
 
     fun moveRight() {
-        column++
+        if (column < maxColumns - 1)
+            column++
     }
 }

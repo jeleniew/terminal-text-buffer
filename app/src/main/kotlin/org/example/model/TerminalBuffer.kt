@@ -10,7 +10,7 @@ class TerminalBuffer(
     var foreground: Int = 0
     var background: Int = 0
     var styles: Set<StyleFlag> = emptySet()
-    var cursor: Cursor = Cursor()
+    var cursor: Cursor = Cursor(maxColumns = width, maxRows = height)
     var screen: List<TerminalLine> = emptyList()
     val scrollback: List<TerminalLine> = emptyList()
 }
