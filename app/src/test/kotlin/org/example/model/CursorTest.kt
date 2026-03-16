@@ -7,10 +7,13 @@ import org.example.model.Cursor
 
 class CursorTest {
     private lateinit var cursor: Cursor
+    private val N = 5
+    private val maxColumns = 80
+    private val maxRows = 24
 
     @BeforeEach
     fun setUp() {
-        cursor = Cursor(maxColumns = 80, maxRows = 24)
+        cursor = Cursor(maxColumns = maxColumns, maxRows = maxRows)
         cursor.setPosition(40, 12)
     }
 
@@ -27,53 +30,53 @@ class CursorTest {
 
     @Test
     fun cursorCanMoveUp() {
-        cursor.moveUp()
-        assertPosition(40, 11)
+        cursor.moveUp(N)
+        assertPosition(40, 12 - N)
     }
 
     @Test
     fun cursorCanMoveDown() {
-        cursor.moveDown()
-        assertPosition(40, 13)
+        cursor.moveDown(N)
+        assertPosition(40, 12 + N)
     }
 
     @Test
     fun cursorCanMoveLeft() {
-        cursor.moveLeft()
-        assertPosition(39, 12)
+        cursor.moveLeft(N)
+        assertPosition(40 - N, 12)
     }
 
     @Test
     fun cursorCanMoveRight() {
-        cursor.moveRight()
-        assertPosition(41, 12)
+        cursor.moveRight(N)
+        assertPosition(40 + N, 12)
     }
 
     @Test
     fun cursorDoesNotMoveUpWhenAtTop() {
         cursor.setPosition(0, 0)
-        cursor.moveUp()
+        cursor.moveUp(N)
         assertPosition(0, 0)
     }
 
     @Test
     fun cursorDoesNotMoveDownWhenAtBottom() {
-        cursor.setPosition(0, 23)
-        cursor.moveDown()
-        assertPosition(0, 23)
+        cursor.setPosition(0, maxRows - 1)
+        cursor.moveDown(N)
+        assertPosition(0, maxRows - 1)
     }
 
     @Test
     fun cursorDoesNotMoveLeftWhenAtLeftmost() {
         cursor.setPosition(0, 0)
-        cursor.moveLeft()
+        cursor.moveLeft(N)
         assertPosition(0, 0)
     }
 
     @Test
     fun cursorDoesNotMoveRightWhenAtRightmost() {
-        cursor.setPosition(79, 0)
-        cursor.moveRight()
-        assertPosition(79, 0)
+        cursor.setPosition(maxColumns - 1, 0)
+        cursor.moveRight(N)
+        assertPosition(maxColumns - 1, 0)
     }
 }

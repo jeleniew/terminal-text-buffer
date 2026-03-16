@@ -17,23 +17,19 @@ class Cursor(
         }
     }
 
-    fun moveUp() {
-        if (row > 0)
-            row--
+    fun moveUp(n: Int) {
+        row = Math.max(0, row - n)
     }
 
-    fun moveDown() {
-        if (row < maxRows - 1)
-            row++
+    fun moveDown(n: Int) {
+        row = Math.min(maxRows - 1, row + n)
     }
 
-    fun moveLeft() {
-        if (column > 0)
-            column--
+    fun moveLeft(n: Int) {
+        column = Math.max(0, column - n)
     }
 
-    fun moveRight() {
-        if (column < maxColumns - 1)
-            column++
+    fun moveRight(n: Int) {
+        column = Math.min(maxColumns - 1, column + n)
     }
 }
