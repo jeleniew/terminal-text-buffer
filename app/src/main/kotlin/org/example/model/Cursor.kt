@@ -1,18 +1,20 @@
 package org.example.model
 
 class Cursor(
-    var column: Int = 0,
-    var row: Int = 0,
+    private var column: Int = 0,
+    private var row: Int = 0,
     private val maxColumns: Int,
     private val maxRows: Int
 ) {
-    fun getPostion(): Pair<Int, Int> {
+    fun getPosition(): Pair<Int, Int> {
         return Pair(column, row)
     }
 
     fun setPosition(column: Int, row: Int) {
-        this.column = column
-        this.row = row
+        if (column in 0 until maxColumns && row in 0 until maxRows) {
+            this.column = column
+            this.row = row
+        }
     }
 
     fun moveUp() {
