@@ -11,6 +11,22 @@ class TerminalBuffer(
     var background: Int = 0
     var styles: Set<StyleFlag> = emptySet()
     var cursor: Cursor = Cursor(maxColumns = width, maxRows = height)
-    var screen: List<TerminalLine> = emptyList()
+    var screen: List<TerminalLine> = listOf(
+        TerminalLine(width, foreground, background, styles)
+    )
     val scrollback: List<TerminalLine> = emptyList()
+
+    fun write(text: String) {
+        var position = cursor.getPosition()
+        if (position.second >= screen.size) {
+            for (i in screen.size..position.second) {
+                screen = screen + 
+                    TerminalLine(width, foreground, background, styles)
+            }
+        }
+        val currentLine = screen[position.second]
+
+        currentLine.replaceText(text, position.first)
+        cursor.moveRight(text.length)
+    }
 }
