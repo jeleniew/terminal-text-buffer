@@ -29,4 +29,21 @@ class TerminalBuffer(
         currentLine.replaceText(text, position.first)
         cursor.moveRight(text.length)
     }
+
+    fun insert(text: String) {
+        val splitText = text.split("\n")
+        for ((index, line) in splitText.withIndex()) {
+            write(line)
+
+            if (index < splitText.lastIndex) {
+                val (_, row) = cursor.getPosition()
+
+                if (row + 1 >= height) {
+                    break
+                }
+
+                cursor.setPosition(0, row + 1)
+            }
+        }
+    }
 }

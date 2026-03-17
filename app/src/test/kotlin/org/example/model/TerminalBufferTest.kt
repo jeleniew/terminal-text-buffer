@@ -21,6 +21,7 @@ class TerminalBufferTest {
 
     fun assertPosition(expectedColumn: Int, expectedRow: Int) {
         val position = buffer.cursor.getPosition()
+        print("Expected position: ($expectedColumn, $expectedRow), Actual position: (${position.first}, ${position.second})")
         assertEquals(expectedColumn, position.first)
         assertEquals(expectedRow, position.second)
     }
@@ -48,5 +49,36 @@ class TerminalBufferTest {
             .take(N + line2.length)
         )
         assertPosition(N + line2.length, 0)
+    }
+
+    @Test
+    fun insertWritesOneLine() {
+        buffer.insert(dummyText)
+        assertEquals(dummyText, buffer.screen[0].cells.map { it.char }
+            .joinToString("").take(dummyText.length))
+        assertPosition(dummyText.length, 0)
+    }
+
+    @Test
+    fun insertWritesMultipleLines() {
+        val multiLineText = "Line 1\nLine 2\nLine 3"
+        buffer.insert(multiLineText)
+        val expectedLines = multiLineText.split("\n")
+        for (i in expectedLines.indices) {
+            assertEquals(expectedLines[i], buffer.screen[i].cells.map { it.char }
+                .joinToString("").take(expectedLines[i].length))
+        }
+        assertPosition(expectedLines.last().length, expectedLines.size - 1)
+    }
+
+    @Test
+    fun insertDoesNotWriteBeyondMaxRows() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        for (i in 0 until maxRows) {
+            assertEquals("Line ${i + 1}", buffer.screen[i].cells.map { it.char }
+                .joinToString("").take("Line ${i + 1}".length))
+        }
+        assertPosition(6, maxRows - 1)
     }
 }
