@@ -20,4 +20,10 @@ class TerminalLine(
             cells[startColumn + i] = CharacterCell(char, foreground, background, styles)
         }
     }
+
+    fun fill(character: Char) {
+        for (i in cells.indices) {
+            cells[i] = CharacterCell(character, foreground, background, styles)
+        }
+    }
 }

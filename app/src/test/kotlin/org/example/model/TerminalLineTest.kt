@@ -51,4 +51,25 @@ class TerminalLineTest {
             line.cells.map { it.char }.joinToString("")
         )
     }
+
+    @Test
+    fun fill_fillsLineWithCharacter() {
+        val fillChar = '*'
+        line.fill(fillChar)
+        assertEquals(
+            fillChar.toString().repeat(maxColumns),
+            line.cells.map { it.char }.joinToString("")
+        )
+    }
+
+    @Test
+    fun fill_overridesExistingText() {
+        line.replaceText(dummyText, 0)
+        val fillChar = '#'
+        line.fill(fillChar)
+        assertEquals(
+            fillChar.toString().repeat(maxColumns),
+            line.cells.map { it.char }.joinToString("")
+        )
+    }
 }

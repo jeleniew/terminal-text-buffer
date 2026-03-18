@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.example.model.Cursor
 import org.example.model.TerminalBuffer
+import org.example.model.TerminalLine
 
 class TerminalBufferTest {
     private lateinit var buffer: TerminalBuffer
@@ -80,5 +81,31 @@ class TerminalBufferTest {
                 .joinToString("").take("Line ${i + 1}".length))
         }
         assertPosition(6, maxRows - 1)
+    }
+
+    @Test
+    fun fillLine_fillsCurrentLineWithCharacter() {
+        val fillChar = '*'
+        buffer.fillLine(fillChar)
+        assertEquals(
+            fillChar.toString().repeat(maxColumns),
+            buffer.screen[0].cells.map { it.char }.joinToString("")
+        )
+        assertPosition(0, 0)
+    }
+
+    @Test
+    fun fillLine_fillsCorrectRow() {
+        val fillChar = '*'
+        buffer.screen = List(maxRows) {
+            TerminalLine(maxColumns, 0, 0, emptySet())
+        }
+        buffer.cursor.setPosition(0, 2)
+        buffer.fillLine(fillChar)
+        assertEquals(
+            fillChar.toString().repeat(maxColumns),
+            buffer.screen[2].cells.map { it.char }.joinToString("")
+        )
+        assertPosition(0, 2)
     }
 }

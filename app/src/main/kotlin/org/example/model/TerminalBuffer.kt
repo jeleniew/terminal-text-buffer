@@ -46,4 +46,12 @@ class TerminalBuffer(
             }
         }
     }
+
+    fun fillLine(character: Char) {
+        cursor.getPosition().let { (_, row) ->
+            if (row < screen.size) {
+                screen[row].fill(character)
+            }
+        }
+    }
 }
