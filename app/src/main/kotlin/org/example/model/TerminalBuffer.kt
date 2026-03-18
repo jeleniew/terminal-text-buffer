@@ -54,4 +54,10 @@ class TerminalBuffer(
             }
         }
     }
+
+    fun addNewLine() {
+        if (screen.size < height) {
+            screen = screen + TerminalLine(width, foreground, background, styles)
+        }
+    }
 }

@@ -108,4 +108,20 @@ class TerminalBufferTest {
         )
         assertPosition(0, 2)
     }
+
+    @Test
+    fun addNewLine_addsNewLineToScreen() {
+        buffer.addNewLine()
+        assertEquals(2, buffer.screen.size)
+        assertPosition(0, 0)
+    }
+
+    @Test
+    fun addNewLine_doesNotExceedMaxRows() {
+        for (i in 1..(maxRows + 2)) {
+            buffer.addNewLine()
+        }
+        assertEquals(maxRows, buffer.screen.size)
+        assertPosition(0, 0)
+    }
 }
