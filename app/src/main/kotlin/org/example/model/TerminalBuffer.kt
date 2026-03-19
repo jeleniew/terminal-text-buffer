@@ -33,11 +33,6 @@ class TerminalBuffer(
 
     fun write(text: String) {
         var position = cursor.getPosition()
-        if (position.second >= screen.size) {
-            for (i in screen.size..position.second) {
-                screen.add(TerminalLine(width, foreground, background, styles))
-            }
-        }
         val currentLine = screen[position.second]
 
         currentLine.replaceText(text, position.first)
