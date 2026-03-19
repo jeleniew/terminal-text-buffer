@@ -291,15 +291,15 @@ class TerminalBufferTest {
         val multiLineText = (1..maxRows).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
         val screenContent = buffer.getScreenContentAsString()
-        val expectedContent = (1..maxRows).joinToString("\n") { "Line $it" }
-        assertEquals(expectedContent, screenContent.take(expectedContent.length))
+        val expectedContent = multiLineText
+        assertEquals(expectedContent, screenContent)
     }
 
     @Test
     fun getScreenContentAsString_returnsEmptyScreenContent() {
         val screenContent = buffer.getScreenContentAsString()
-        val expectedContent = ("").repeat(maxColumns)
-        assertEquals(expectedContent, screenContent.take(expectedContent.length))
+        val expectedContent = ("")
+        assertEquals(expectedContent, screenContent)
     }
 
     @Test
