@@ -162,7 +162,7 @@ class TerminalBufferTest {
         buffer.insert(multiLineText)
         buffer.clearScreen()
 
-        assertEquals(1, buffer.screen.size)
+        assertEquals(maxRows, buffer.screen.size)
         assertEquals(
             (" ").repeat(maxColumns),
             buffer.screen[0].cells.map { it.char }.joinToString("")
@@ -178,12 +178,11 @@ class TerminalBufferTest {
         val screen = buffer.screen
         val scrollback = buffer.getScrollback()
 
-        assertEquals(1, screen.size)
+        assertEquals(maxRows, screen.size)
         assertEquals(
             (" ").repeat(maxColumns),
             buffer.screen[0].cells.map { it.char }.joinToString("")
         )
-        assertEquals(1, buffer.screen.size)
         assertEquals(0, scrollback.size)
 
         assertPosition(0, 0)
