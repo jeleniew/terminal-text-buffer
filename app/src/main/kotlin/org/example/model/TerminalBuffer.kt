@@ -78,4 +78,11 @@ class TerminalBuffer(
         clearScreen()
         clearScrollback()
     }
+
+    fun getCharacterFromScreenAt(column: Int, row: Int): CharacterCell? {
+        if (row < 0 || row >= screen.size) return null
+        val line = screen[row]
+        if (column < 0 || column >= line.cells.size) return null
+        return line.cells[column]
+    }
 }
