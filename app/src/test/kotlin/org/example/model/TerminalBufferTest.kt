@@ -24,7 +24,6 @@ class TerminalBufferTest {
 
     fun assertPosition(expectedColumn: Int, expectedRow: Int) {
         val position = buffer.cursor.getPosition()
-        print("Expected position: ($expectedColumn, $expectedRow), Actual position: (${position.first}, ${position.second})")
         assertEquals(expectedColumn, position.first)
         assertEquals(expectedRow, position.second)
     }
@@ -104,7 +103,6 @@ class TerminalBufferTest {
             val expectedLine = "Line ${i + 1}"
             val actualLine = screen[i - 2].cells.map { it.char }.joinToString("")
                 .take(expectedLine.length)
-            println("assertions result: $expectedLine, $actualLine")
             assertEquals(expectedLine, actualLine)
         }
         assertPosition(6, maxRows - 1)
