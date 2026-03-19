@@ -132,4 +132,10 @@ class TerminalBuffer(
         if (row < 0 || row >= scrollback.size) return null
         return scrollback[row].cells.map { it.char }.joinToString("")
     }
+
+    fun getScreenContentAsString(): String {
+        return screen.joinToString("\n") { line ->
+            line.cells.map { it.char }.joinToString("").trimEnd()
+        }
+    }
 }

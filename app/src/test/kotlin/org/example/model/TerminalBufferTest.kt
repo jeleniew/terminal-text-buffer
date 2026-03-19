@@ -285,4 +285,20 @@ class TerminalBufferTest {
         assertEquals(null, buffer.getLineAsStringFromScrollbackAt(-1))
         assertEquals(null, buffer.getLineAsStringFromScrollbackAt(2))
     }
+
+    @Test
+    fun getScreenContentAsString_returnsFullScreenContent() {
+        val multiLineText = (1..maxRows).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        val screenContent = buffer.getScreenContentAsString()
+        val expectedContent = (1..maxRows).joinToString("\n") { "Line $it" }
+        assertEquals(expectedContent, screenContent.take(expectedContent.length))
+    }
+
+    @Test
+    fun getScreenContentAsString_returnsEmptyScreenContent() {
+        val screenContent = buffer.getScreenContentAsString()
+        val expectedContent = ("").repeat(maxColumns)
+        assertEquals(expectedContent, screenContent.take(expectedContent.length))
+    }
 }
