@@ -255,4 +255,18 @@ class TerminalBufferTest {
         assertEquals(null, buffer.getAttributesFromScrollbackAt(0, -1))
         assertEquals(null, buffer.getAttributesFromScrollbackAt(0, 1))
     }
+
+    @Test
+    fun getLineAsStringFromScreenAt_returnsCorrectLine() {
+        buffer.write("Hello, World!")
+        val line = buffer.getLineAsStringFromScreenAt(0)
+        assertEquals("Hello, World!", line?.take("Hello, World!".length))
+    }
+
+    @Test
+    fun getLineAsStringFromScreenAt_outOfBoundsReturnsNull() {
+        buffer.write("Hello, World!")
+        assertEquals(null, buffer.getLineAsStringFromScreenAt(-1))
+        assertEquals(null, buffer.getLineAsStringFromScreenAt(1))
+    }
 }

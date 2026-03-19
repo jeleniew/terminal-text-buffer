@@ -122,4 +122,9 @@ class TerminalBuffer(
         if (column < 0 || column >= line.cells.size) return null
         return line.cells[column]
     }
+
+    fun getLineAsStringFromScreenAt(row: Int): String? {
+        if (row < 0 || row >= screen.size) return null
+        return screen[row].cells.map { it.char }.joinToString("")
+    }
 }
