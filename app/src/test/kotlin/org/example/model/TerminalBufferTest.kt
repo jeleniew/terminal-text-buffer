@@ -287,26 +287,26 @@ class TerminalBufferTest {
     }
 
     @Test
-    fun getScreenContentAsString_returnsFullScreenContent() {
+    fun getEntireScreenContentAsString_returnsFullScreenContent() {
         val multiLineText = (1..maxRows).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
-        val screenContent = buffer.getScreenContentAsString()
+        val screenContent = buffer.getEntireScreenContentAsString()
         val expectedContent = multiLineText
         assertEquals(expectedContent, screenContent)
     }
 
     @Test
-    fun getScreenContentAsString_returnsEmptyScreenContent() {
-        val screenContent = buffer.getScreenContentAsString()
+    fun getEntireScreenContentAsString_returnsEmptyScreenContent() {
+        val screenContent = buffer.getEntireScreenContentAsString()
         val expectedContent = ("")
         assertEquals(expectedContent, screenContent)
     }
 
     @Test
-    fun getFullContentAsString_returnsCombinedScrollbackAndScreen() {
+    fun getEntireContentAsString_returnsCombinedScrollbackAndScreen() {
         val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
-        val fullContent = buffer.getFullContentAsString()
+        val fullContent = buffer.getEntireContentAsString()
         val expectedContent = multiLineText
         assertEquals(expectedContent, fullContent)
     }

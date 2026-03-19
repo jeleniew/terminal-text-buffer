@@ -133,21 +133,21 @@ class TerminalBuffer(
         return scrollback[row].cells.map { it.char }.joinToString("")
     }
 
-    fun getScreenContentAsString(): String {
+    fun getEntireScreenContentAsString(): String {
         return screen.joinToString("\n") { line ->
             line.cells.map { it.char }.joinToString("").trimEnd()
         }
     }
 
-    private fun getScrollbackContentAsString(): String {
+    private fun getEntireScrollbackContentAsString(): String {
         return scrollback.joinToString("\n") { line ->
             line.cells.map { it.char }.joinToString("").trimEnd()
         }
     }
 
-    fun getFullContentAsString(): String {
-        val scrollbackContent = getScrollbackContentAsString()
-        val screenContent = getScreenContentAsString()
+    fun getEntireContentAsString(): String {
+        val scrollbackContent = getEntireScrollbackContentAsString()
+        val screenContent = getEntireScreenContentAsString()
         return if (scrollbackContent.isEmpty()) {
             screenContent
         } else {
