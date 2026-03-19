@@ -30,6 +30,6 @@ class Cursor(
     }
 
     fun moveRight(n: Int) {
-        column = Math.min(maxColumns - 1, column + n)
+        column = Math.min(maxColumns, column + n)
     }
 }

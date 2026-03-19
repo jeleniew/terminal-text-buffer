@@ -61,6 +61,19 @@ class TerminalBufferTest {
     }
 
     @Test
+    fun write_DoesNotWriteBeyondMaxColumns() {
+        val longText = "This text is definitely longer than the max columns"
+        buffer.write(longText)
+        assertEquals(maxColumns, buffer.screen[0].cells.size)
+        assertEquals(
+            longText.take(maxColumns),
+            buffer.screen[0].cells.map { it.char }.joinToString("")
+                .take(maxColumns)
+        )
+        assertPosition(maxColumns, 0)
+    }
+
+    @Test
     fun insertWritesOneLine() {
         buffer.insert(dummyText)
         assertEquals(dummyText, buffer.screen[0].cells.map { it.char }

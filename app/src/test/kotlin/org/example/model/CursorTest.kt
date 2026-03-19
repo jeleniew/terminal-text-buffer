@@ -77,6 +77,6 @@ class CursorTest {
     fun cursorDoesNotMoveRightWhenAtRightmost() {
         cursor.setPosition(maxColumns - 1, 0)
         cursor.moveRight(N)
-        assertPosition(maxColumns - 1, 0)
+        assertPosition(maxColumns, 0)
     }
 }

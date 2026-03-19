@@ -46,14 +46,12 @@ class TerminalBuffer(
 
             if (index < splitText.lastIndex) {
                 val (_, row) = cursor.getPosition()
-                val newRow: Int
-
-                if (row >= height - 1) {
-                    moveLineFromScreenToScrollback()
-                    newRow = height - 1
+                addNewLine()
+                
+                val newRow = if (row < height - 1) {
+                    row + 1
                 } else {
-                    addNewLine()
-                    newRow = row + 1
+                    row
                 }
                 cursor.setPosition(0, newRow)
             }
@@ -69,9 +67,10 @@ class TerminalBuffer(
     }
 
     fun addNewLine() {
-        if (screen.size < height) {
-            screen.add(TerminalLine(width, foreground, background, styles))
+        if (screen.size >= height) {
+            moveLineFromScreenToScrollback()
         }
+        screen.add(TerminalLine(width, foreground, background, styles))
     }
 
     fun clearScreen() {
