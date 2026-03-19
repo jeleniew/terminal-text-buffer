@@ -77,9 +77,27 @@ class TerminalBufferTest {
     fun insertDoesNotWriteBeyondMaxRows() {
         val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
-        for (i in 0 until maxRows) {
-            assertEquals("Line ${i + 1}", buffer.screen[i].cells.map { it.char }
-                .joinToString("").take("Line ${i + 1}".length))
+        val scrollback = buffer.getScrollback()
+        val screen = buffer.screen
+
+        assertEquals(2, scrollback.size)
+        assertEquals(
+            "Line 1",
+            scrollback[0].cells.map { it.char }.joinToString("")
+                .take("Line 1".length)
+        )
+        assertEquals(
+            "Line 2",
+            scrollback[1].cells.map { it.char }.joinToString("")
+                .take("Line 2".length)
+        )
+        assertEquals(maxRows, screen.size)
+        for (i in 2 until maxRows + 2) {
+            val expectedLine = "Line ${i + 1}"
+            val actualLine = screen[i - 2].cells.map { it.char }.joinToString("")
+                .take(expectedLine.length)
+            println("assertions result: $expectedLine, $actualLine")
+            assertEquals(expectedLine, actualLine)
         }
         assertPosition(6, maxRows - 1)
     }
@@ -98,7 +116,7 @@ class TerminalBufferTest {
     @Test
     fun fillLine_fillsCorrectRow() {
         val fillChar = '*'
-        buffer.screen = List(maxRows) {
+        buffer.screen = MutableList(maxRows) {
             TerminalLine(maxColumns, 0, 0, emptySet())
         }
         buffer.cursor.setPosition(0, 2)

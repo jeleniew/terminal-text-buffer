@@ -11,21 +11,31 @@ class TerminalBuffer(
     var background: Int = 0
     var styles: Set<StyleFlag> = emptySet()
     var cursor: Cursor = Cursor(maxColumns = width, maxRows = height)
-    var screen: List<TerminalLine> = listOf(
+    var screen: MutableList<TerminalLine> = mutableListOf(
         TerminalLine(width, foreground, background, styles)
     )
-    private var scrollback: List<TerminalLine> = emptyList()
+    private var scrollback: MutableList<TerminalLine> = mutableListOf()
 
     fun getScrollback(): List<TerminalLine> {
         return scrollback.toList()
+    }
+
+    private fun moveLineFromScreenToScrollback() {
+        val lineToMove = screen.first()
+        scrollback.add(lineToMove)
+        
+        if (scrollback.size > scrollbackMaxSize) {
+            scrollback = scrollback.drop(scrollback.size - scrollbackMaxSize)
+                .toMutableList()
+        }
+        screen = screen.drop(1).toMutableList()
     }
 
     fun write(text: String) {
         var position = cursor.getPosition()
         if (position.second >= screen.size) {
             for (i in screen.size..position.second) {
-                screen = screen + 
-                    TerminalLine(width, foreground, background, styles)
+                screen.add(TerminalLine(width, foreground, background, styles))
             }
         }
         val currentLine = screen[position.second]
@@ -41,12 +51,16 @@ class TerminalBuffer(
 
             if (index < splitText.lastIndex) {
                 val (_, row) = cursor.getPosition()
+                val newRow: Int
 
-                if (row + 1 >= height) {
-                    break
+                if (row >= height - 1) {
+                    moveLineFromScreenToScrollback()
+                    newRow = height - 1
+                } else {
+                    addNewLine()
+                    newRow = row + 1
                 }
-
-                cursor.setPosition(0, row + 1)
+                cursor.setPosition(0, newRow)
             }
         }
     }
@@ -61,17 +75,19 @@ class TerminalBuffer(
 
     fun addNewLine() {
         if (screen.size < height) {
-            screen = screen + TerminalLine(width, foreground, background, styles)
+            screen.add(TerminalLine(width, foreground, background, styles))
         }
     }
 
     fun clearScreen() {
-        screen = listOf(TerminalLine(width, foreground, background, styles))
+        screen = mutableListOf(
+            TerminalLine(width, foreground, background, styles)
+        )
         cursor.setPosition(0, 0)
     }
 
     private fun clearScrollback() {
-        scrollback = emptyList()
+        scrollback = mutableListOf()
     }
 
     fun clearScreenAndScrollback() {
