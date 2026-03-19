@@ -301,4 +301,13 @@ class TerminalBufferTest {
         val expectedContent = ("").repeat(maxColumns)
         assertEquals(expectedContent, screenContent.take(expectedContent.length))
     }
+
+    @Test
+    fun getFullContentAsString_returnsCombinedScrollbackAndScreen() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        val fullContent = buffer.getFullContentAsString()
+        val expectedContent = multiLineText
+        assertEquals(expectedContent, fullContent)
+    }
 }
