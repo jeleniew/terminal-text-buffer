@@ -8,6 +8,7 @@ import org.example.model.TerminalBuffer
 import org.example.model.TerminalLine
 import kotlin.assert
 import org.example.model.CharacterCell
+import org.example.model.TerminalColor
 
 class TerminalBufferTest {
     private lateinit var buffer: TerminalBuffer
@@ -139,7 +140,12 @@ class TerminalBufferTest {
     fun fillLine_fillsCorrectRow() {
         val fillChar = '*'
         buffer.screen = MutableList(maxRows) {
-            TerminalLine(maxColumns, 0, 0, emptySet())
+            TerminalLine(
+                maxColumns,
+                TerminalColor.DEFAULT,
+                TerminalColor.DEFAULT,
+                emptySet()
+            )
         }
         buffer.cursor.setPosition(0, 2)
         buffer.fillLine(fillChar)
@@ -225,14 +231,24 @@ class TerminalBufferTest {
     fun getAttributesFromScreenAt_returnsCorrectCharacter() {
         buffer.write("ABCDE")
         val charCell = buffer.getAttributesFromScreenAt(2, 0)
-        val expectedCell = CharacterCell('C', 0, 0, emptySet())
+        val expectedCell = CharacterCell(
+            'C',
+            TerminalColor.DEFAULT,
+            TerminalColor.DEFAULT,
+            emptySet()
+        )
         assertCellEquals(expectedCell, charCell)
     }
 
     @Test
     fun getAttributesFromScreenAt_outOfBoundsReturnsNull() {
         buffer.write("ABCDE")
-        val expectedCell = CharacterCell(' ', 0, 0, emptySet())
+        val expectedCell = CharacterCell(
+            ' ',
+            TerminalColor.DEFAULT,
+            TerminalColor.DEFAULT,
+            emptySet()
+        )
         assertEquals(null, buffer.getAttributesFromScreenAt(-1, 0))
         assertCellEquals(expectedCell, buffer.getAttributesFromScreenAt(5, 0))
         assertEquals(null, buffer.getAttributesFromScreenAt(maxColumns, 0))
@@ -246,7 +262,12 @@ class TerminalBufferTest {
         val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
         val charCell = buffer.getAttributesFromScrollbackAt(2, 0)
-        val expectedCell = CharacterCell('n', 0, 0, emptySet())
+        val expectedCell = CharacterCell(
+            'n',
+            TerminalColor.DEFAULT,
+            TerminalColor.DEFAULT,
+            emptySet()
+        )
         assertCellEquals(expectedCell, charCell)
     }
 
@@ -254,7 +275,12 @@ class TerminalBufferTest {
     fun getAttributesFromScrollbackAt_outOfBoundsReturnsNull() {
         val multiLineText = (1..(maxRows + 1)).joinToString("\n") { "Line $it" }
         buffer.insert(multiLineText)
-        val expectedCell = CharacterCell(' ', 0, 0, emptySet())
+        val expectedCell = CharacterCell(
+            ' ',
+            TerminalColor.DEFAULT,
+            TerminalColor.DEFAULT,
+            emptySet()
+        )
         assertEquals(null, buffer.getAttributesFromScrollbackAt(-1, 0))
         assertCellEquals(expectedCell, buffer.getAttributesFromScrollbackAt(6, 0))
         assertEquals(null, buffer.getAttributesFromScrollbackAt(maxColumns, 0))

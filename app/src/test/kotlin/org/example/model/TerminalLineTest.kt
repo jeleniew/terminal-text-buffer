@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.example.model.Cursor
 import org.example.model.TerminalBuffer
 import org.example.model.TerminalLine
+import org.example.model.TerminalColor
 
 class TerminalLineTest {
     private lateinit var line: TerminalLine
@@ -17,8 +18,8 @@ class TerminalLineTest {
     fun setUp() {
         line = TerminalLine(
             maxWidth = maxColumns,
-            foreground = 0,
-            background = 0,
+            foreground = TerminalColor.DEFAULT,
+            background = TerminalColor.DEFAULT,
             styles = emptySet()
         )
     }

@@ -1,11 +1,12 @@
 package org.example.model
 
 import org.example.model.CharacterCell
+import org.example.model.TerminalColor
 
 class TerminalLine(
     private val maxWidth: Int,
-    private var foreground: Int,
-    private var background: Int,
+    private var foreground: TerminalColor,
+    private var background: TerminalColor,
     private var styles: Set<StyleFlag>
 ) {
     var cells: MutableList<CharacterCell> = MutableList(maxWidth) {

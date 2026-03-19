@@ -7,8 +7,8 @@ class TerminalBuffer(
     val height: Int,
     val scrollbackMaxSize: Int
 ) {
-    var foreground: Int = 0
-    var background: Int = 0
+    var foreground: TerminalColor = TerminalColor.DEFAULT
+    var background: TerminalColor = TerminalColor.DEFAULT
     var styles: Set<StyleFlag> = emptySet()
     var cursor: Cursor = Cursor(maxColumns = width, maxRows = height)
     var screen: MutableList<TerminalLine> = MutableList(height) {

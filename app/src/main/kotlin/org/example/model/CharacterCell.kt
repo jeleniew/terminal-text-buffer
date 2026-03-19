@@ -4,7 +4,7 @@ import org.example.model.StyleFlag
 
 class CharacterCell(
     val char: Char = ' ',
-    val fgColor: Int,
-    val bgColor: Int,
+    val fgColor: TerminalColor,
+    val bgColor: TerminalColor,
     val styleFlags: Set<StyleFlag>
 )
