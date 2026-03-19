@@ -182,14 +182,14 @@ class TerminalBufferTest {
     fun getCharacterFromScreenAt_returnsCorrectCharacter() {
         buffer.write("ABCDE")
         val charCell = buffer.getCharacterFromScreenAt(2, 0)
-        assertEquals('C', charCell?.char)
+        assertEquals('C', charCell)
     }
 
     @Test
     fun getCharacterFromScreenAt_outOfBoundsReturnsNull() {
         buffer.write("ABCDE")
         assertEquals(null, buffer.getCharacterFromScreenAt(-1, 0))
-        assertEquals(' ', buffer.getCharacterFromScreenAt(5, 0)?.char)
+        assertEquals(' ', buffer.getCharacterFromScreenAt(5, 0))
         assertEquals(null, buffer.getCharacterFromScreenAt(0, -1))
         assertEquals(null, buffer.getCharacterFromScreenAt(0, 1))
     }

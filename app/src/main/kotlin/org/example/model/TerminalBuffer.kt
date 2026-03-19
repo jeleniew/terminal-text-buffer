@@ -95,17 +95,17 @@ class TerminalBuffer(
         clearScrollback()
     }
 
-    fun getCharacterFromScreenAt(column: Int, row: Int): CharacterCell? {
+    fun getCharacterFromScreenAt(column: Int, row: Int): Char? {
         if (row < 0 || row >= screen.size) return null
         val line = screen[row]
         if (column < 0 || column >= line.cells.size) return null
-        return line.cells[column]
+        return line.cells[column].char
     }
 
-    fun getCharacterFromScrollbackAt(column: Int, row: Int): CharacterCell? {
+    fun getCharacterFromScrollbackAt(column: Int, row: Int): Char? {
         if (row < 0 || row >= scrollback.size) return null
         val line = scrollback[row]
         if (column < 0 || column >= line.cells.size) return null
-        return line.cells[column]
+        return line.cells[column].char
     }
 }
