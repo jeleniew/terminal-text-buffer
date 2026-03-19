@@ -24,6 +24,41 @@ class CursorTest {
     }
 
     @Test
+    fun getPosition_returnsCurrentPosition() {
+        assertPosition(40, 12)
+    }
+
+    @Test
+    fun setPosition_updatesPosition() {
+        cursor.setPosition(10, 5)
+        assertPosition(10, 5)
+    }
+
+    @Test
+    fun setPosition_doesNotUpdateWhenOutOfBounds() {
+        cursor.setPosition(-1, 5)
+        assertPosition(40, 12)
+
+        cursor.setPosition(10, -1)
+        assertPosition(40, 12)
+
+        cursor.setPosition(maxColumns + 1, 5)
+        assertPosition(40, 12)
+
+        cursor.setPosition(10, maxRows)
+        assertPosition(40, 12)
+    }
+
+    @Test
+    fun setPosition_updatesPositionWhenWithinBounds() {
+        cursor.setPosition(0, 0)
+        assertPosition(0, 0)
+
+        cursor.setPosition(maxColumns, maxRows - 1)
+        assertPosition(maxColumns, maxRows - 1)
+    }
+
+    @Test
     fun cursorHasInitialPosition() {
         assertPosition(40, 12)
     }
