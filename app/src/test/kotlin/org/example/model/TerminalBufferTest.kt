@@ -7,6 +7,7 @@ import org.example.model.Cursor
 import org.example.model.TerminalBuffer
 import org.example.model.TerminalLine
 import kotlin.assert
+import org.example.model.CharacterCell
 
 class TerminalBufferTest {
     private lateinit var buffer: TerminalBuffer
@@ -26,6 +27,13 @@ class TerminalBufferTest {
         print("Expected position: ($expectedColumn, $expectedRow), Actual position: (${position.first}, ${position.second})")
         assertEquals(expectedColumn, position.first)
         assertEquals(expectedRow, position.second)
+    }
+
+    fun assertCellEquals(expected: CharacterCell, actual: CharacterCell?) {
+        assertEquals(expected.char, actual?.char)
+        assertEquals(expected.fgColor, actual?.fgColor)
+        assertEquals(expected.bgColor, actual?.bgColor)
+        assertEquals(expected.styleFlags, actual?.styleFlags)
     }
 
     @Test
@@ -192,5 +200,23 @@ class TerminalBufferTest {
         assertEquals(' ', buffer.getCharacterFromScreenAt(5, 0))
         assertEquals(null, buffer.getCharacterFromScreenAt(0, -1))
         assertEquals(null, buffer.getCharacterFromScreenAt(0, 1))
+    }
+
+    @Test
+    fun getAttributesFromScreenAt_returnsCorrectCharacter() {
+        buffer.write("ABCDE")
+        val charCell = buffer.getAttributesFromScreenAt(2, 0)
+        val expectedCell = CharacterCell('C', 0, 0, emptySet())
+        assertCellEquals(expectedCell, charCell)
+    }
+
+    @Test
+    fun getAttributesFromScreenAt_outOfBoundsReturnsNull() {
+        buffer.write("ABCDE")
+        val expectedCell = CharacterCell(' ', 0, 0, emptySet())
+        assertEquals(null, buffer.getAttributesFromScreenAt(-1, 0))
+        assertCellEquals(expectedCell, buffer.getAttributesFromScreenAt(5, 0))
+        assertEquals(null, buffer.getAttributesFromScreenAt(0, -1))
+        assertEquals(null, buffer.getAttributesFromScreenAt(0, 1))
     }
 }

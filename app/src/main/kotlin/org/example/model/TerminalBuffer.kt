@@ -108,4 +108,18 @@ class TerminalBuffer(
         if (column < 0 || column >= line.cells.size) return null
         return line.cells[column].char
     }
+
+    fun getAttributesFromScreenAt(column: Int, row: Int): CharacterCell? {
+        if (row < 0 || row >= screen.size) return null
+        val line = screen[row]
+        if (column < 0 || column >= line.cells.size) return null
+        return line.cells[column]
+    }
+
+    fun getAttributesFromScrollbackAt(column: Int, row: Int): CharacterCell? {
+        if (row < 0 || row >= scrollback.size) return null
+        val line = scrollback[row]
+        if (column < 0 || column >= line.cells.size) return null
+        return line.cells[column]
+    }
 }
