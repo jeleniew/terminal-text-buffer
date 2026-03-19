@@ -14,7 +14,11 @@ class TerminalBuffer(
     var screen: List<TerminalLine> = listOf(
         TerminalLine(width, foreground, background, styles)
     )
-    val scrollback: List<TerminalLine> = emptyList()
+    private var scrollback: List<TerminalLine> = emptyList()
+
+    fun getScrollback(): List<TerminalLine> {
+        return scrollback.toList()
+    }
 
     fun write(text: String) {
         var position = cursor.getPosition()
@@ -64,5 +68,14 @@ class TerminalBuffer(
     fun clearScreen() {
         screen = listOf(TerminalLine(width, foreground, background, styles))
         cursor.setPosition(0, 0)
+    }
+
+    private fun clearScrollback() {
+        scrollback = emptyList()
+    }
+
+    fun clearScreenAndScrollback() {
+        clearScreen()
+        clearScrollback()
     }
 }

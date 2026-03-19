@@ -139,4 +139,24 @@ class TerminalBufferTest {
         )
         assertPosition(0, 0)
     }
+
+    @Test
+    fun clearScreenAndScrollback_resetsBothScreenAndScrollback() {
+        buffer.write(dummyText)
+        buffer.addNewLine()
+        buffer.write(dummyText)
+        buffer.clearScreenAndScrollback()
+        val screen = buffer.screen
+        val scrollback = buffer.getScrollback()
+
+        assertEquals(1, screen.size)
+        assertEquals(
+            (" ").repeat(maxColumns),
+            buffer.screen[0].cells.map { it.char }.joinToString("")
+        )
+        assertEquals(1, buffer.screen.size)
+        assertEquals(0, scrollback.size)
+
+        assertPosition(0, 0)
+    }
 }
