@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.example.model.Cursor
 import org.example.model.TerminalBuffer
 import org.example.model.TerminalLine
+import kotlin.assert
 
 class TerminalBufferTest {
     private lateinit var buffer: TerminalBuffer
@@ -122,6 +123,20 @@ class TerminalBufferTest {
             buffer.addNewLine()
         }
         assertEquals(maxRows, buffer.screen.size)
+        assertPosition(0, 0)
+    }
+
+    @Test
+    fun clearScreen_resetsScreenToEmptyLine() {
+        buffer.write(dummyText)
+        buffer.addNewLine()
+        buffer.write(dummyText)
+        buffer.clearScreen()
+        assertEquals(1, buffer.screen.size)
+        assertEquals(
+            (" ").repeat(maxColumns),
+            buffer.screen[0].cells.map { it.char }.joinToString("")
+        )
         assertPosition(0, 0)
     }
 }

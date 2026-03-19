@@ -60,4 +60,9 @@ class TerminalBuffer(
             screen = screen + TerminalLine(width, foreground, background, styles)
         }
     }
+
+    fun clearScreen() {
+        screen = listOf(TerminalLine(width, foreground, background, styles))
+        cursor.setPosition(0, 0)
+    }
 }
