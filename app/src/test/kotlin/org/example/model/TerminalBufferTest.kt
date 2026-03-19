@@ -203,6 +203,24 @@ class TerminalBufferTest {
     }
 
     @Test
+    fun getCharacterFromScrollbackAt_returnsCorrectCharacter() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        val charCell = buffer.getCharacterFromScrollbackAt(2, 0)
+        assertEquals('n', charCell)
+    }
+
+    @Test
+    fun getCharacterFromScrollbackAt_outOfBoundsReturnsNull() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        assertEquals(null, buffer.getCharacterFromScrollbackAt(-1, 0))
+        assertEquals(' ', buffer.getCharacterFromScrollbackAt(6, 0))
+        assertEquals(null, buffer.getCharacterFromScrollbackAt(0, -1))
+        assertEquals(null, buffer.getCharacterFromScrollbackAt(0, 2))
+    }
+
+    @Test
     fun getAttributesFromScreenAt_returnsCorrectCharacter() {
         buffer.write("ABCDE")
         val charCell = buffer.getAttributesFromScreenAt(2, 0)
