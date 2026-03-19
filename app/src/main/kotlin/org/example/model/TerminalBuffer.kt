@@ -68,9 +68,9 @@ class TerminalBuffer(
     }
 
     fun clearScreen() {
-        screen = mutableListOf(
+        screen = MutableList(height) {
             TerminalLine(width, foreground, background, styles)
-        )
+        }
         cursor.setPosition(0, 0)
     }
 
