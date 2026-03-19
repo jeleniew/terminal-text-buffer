@@ -269,4 +269,20 @@ class TerminalBufferTest {
         assertEquals(null, buffer.getLineAsStringFromScreenAt(-1))
         assertEquals(null, buffer.getLineAsStringFromScreenAt(1))
     }
+
+    @Test
+    fun getLineAsStringFromScrollbackAt_returnsCorrectLine() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        val line = buffer.getLineAsStringFromScrollbackAt(0)
+        assertEquals("Line 1", line?.take("Line 1".length))
+    }
+
+    @Test
+    fun getLineAsStringFromScrollbackAt_outOfBoundsReturnsNull() {
+        val multiLineText = (1..(maxRows + 2)).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
+        assertEquals(null, buffer.getLineAsStringFromScrollbackAt(-1))
+        assertEquals(null, buffer.getLineAsStringFromScrollbackAt(2))
+    }
 }

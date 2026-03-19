@@ -127,4 +127,9 @@ class TerminalBuffer(
         if (row < 0 || row >= screen.size) return null
         return screen[row].cells.map { it.char }.joinToString("")
     }
+
+    fun getLineAsStringFromScrollbackAt(row: Int): String? {
+        if (row < 0 || row >= scrollback.size) return null
+        return scrollback[row].cells.map { it.char }.joinToString("")
+    }
 }
