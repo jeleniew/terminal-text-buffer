@@ -11,7 +11,7 @@ class Cursor(
     }
 
     fun setPosition(column: Int, row: Int) {
-        if (column in 0 until maxColumns && row in 0 until maxRows) {
+        if (column in 0..maxColumns && row in 0 until maxRows) {
             this.column = column
             this.row = row
         }
