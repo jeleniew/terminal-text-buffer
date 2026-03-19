@@ -11,9 +11,9 @@ class TerminalBuffer(
     var background: Int = 0
     var styles: Set<StyleFlag> = emptySet()
     var cursor: Cursor = Cursor(maxColumns = width, maxRows = height)
-    var screen: MutableList<TerminalLine> = mutableListOf(
+    var screen: MutableList<TerminalLine> = MutableList(height) {
         TerminalLine(width, foreground, background, styles)
-    )
+    }
     private var scrollback: MutableList<TerminalLine> = mutableListOf()
 
     fun getScrollback(): List<TerminalLine> {
@@ -29,6 +29,7 @@ class TerminalBuffer(
                 .toMutableList()
         }
         screen = screen.drop(1).toMutableList()
+        screen.add(TerminalLine(width, foreground, background, styles))
     }
 
     fun write(text: String) {
@@ -46,11 +47,11 @@ class TerminalBuffer(
 
             if (index < splitText.lastIndex) {
                 val (_, row) = cursor.getPosition()
-                addNewLine()
-                
+
                 val newRow = if (row < height - 1) {
                     row + 1
                 } else {
+                    moveLineFromScreenToScrollback()
                     row
                 }
                 cursor.setPosition(0, newRow)
@@ -64,13 +65,6 @@ class TerminalBuffer(
                 screen[row].fill(character)
             }
         }
-    }
-
-    fun addNewLine() {
-        if (screen.size >= height) {
-            moveLineFromScreenToScrollback()
-        }
-        screen.add(TerminalLine(width, foreground, background, styles))
     }
 
     fun clearScreen() {
@@ -128,7 +122,10 @@ class TerminalBuffer(
     }
 
     fun getEntireScreenContentAsString(): String {
-        return screen.joinToString("\n") { line ->
+        val nonEmptyLines = screen.dropLastWhile { line ->
+            line.cells.all { it.char == ' ' }
+        }
+        return nonEmptyLines.joinToString("\n") { line ->
             line.cells.map { it.char }.joinToString("").trimEnd()
         }
     }

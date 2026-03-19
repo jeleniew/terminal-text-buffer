@@ -51,11 +51,14 @@ class TerminalBufferTest {
         buffer.write(line1)
         buffer.cursor.setPosition(N, 0)
         buffer.write(line2)
-        assertEquals(1, buffer.screen.size)
+
+        val screen = buffer.screen
+
+        assertEquals(maxRows, screen.size)
         assertEquals(
             "${line1.take(N)}${line2}",
-            buffer.screen[0].cells.map { it.char }.joinToString("")
-            .take(N + line2.length)
+            screen[0].cells.map { it.char }.joinToString("")
+                .take(N + line2.length)
         )
         assertPosition(N + line2.length, 0)
     }
@@ -148,27 +151,11 @@ class TerminalBufferTest {
     }
 
     @Test
-    fun addNewLine_addsNewLineToScreen() {
-        buffer.addNewLine()
-        assertEquals(2, buffer.screen.size)
-        assertPosition(0, 0)
-    }
-
-    @Test
-    fun addNewLine_doesNotExceedMaxRows() {
-        for (i in 1..(maxRows + 2)) {
-            buffer.addNewLine()
-        }
-        assertEquals(maxRows, buffer.screen.size)
-        assertPosition(0, 0)
-    }
-
-    @Test
     fun clearScreen_resetsScreenToEmptyLine() {
-        buffer.write(dummyText)
-        buffer.addNewLine()
-        buffer.write(dummyText)
+        val multiLineText = (1..maxRows).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
         buffer.clearScreen()
+
         assertEquals(1, buffer.screen.size)
         assertEquals(
             (" ").repeat(maxColumns),
@@ -179,9 +166,8 @@ class TerminalBufferTest {
 
     @Test
     fun clearScreenAndScrollback_resetsBothScreenAndScrollback() {
-        buffer.write(dummyText)
-        buffer.addNewLine()
-        buffer.write(dummyText)
+        val multiLineText = (1..maxRows).joinToString("\n") { "Line $it" }
+        buffer.insert(multiLineText)
         buffer.clearScreenAndScrollback()
         val screen = buffer.screen
         val scrollback = buffer.getScrollback()
@@ -209,8 +195,10 @@ class TerminalBufferTest {
         buffer.write("ABCDE")
         assertEquals(null, buffer.getCharacterFromScreenAt(-1, 0))
         assertEquals(' ', buffer.getCharacterFromScreenAt(5, 0))
+        assertEquals(null, buffer.getCharacterFromScreenAt(maxColumns, 0))
         assertEquals(null, buffer.getCharacterFromScreenAt(0, -1))
-        assertEquals(null, buffer.getCharacterFromScreenAt(0, 1))
+        assertEquals(' ', buffer.getCharacterFromScreenAt(0, 1))
+        assertEquals(null, buffer.getCharacterFromScreenAt(0, maxRows))
     }
 
     @Test
@@ -227,8 +215,10 @@ class TerminalBufferTest {
         buffer.insert(multiLineText)
         assertEquals(null, buffer.getCharacterFromScrollbackAt(-1, 0))
         assertEquals(' ', buffer.getCharacterFromScrollbackAt(6, 0))
+        assertEquals(null, buffer.getCharacterFromScrollbackAt(maxColumns, 2))
         assertEquals(null, buffer.getCharacterFromScrollbackAt(0, -1))
         assertEquals(null, buffer.getCharacterFromScrollbackAt(0, 2))
+        assertEquals(null, buffer.getCharacterFromScrollbackAt(0, maxRows))
     }
 
     @Test
@@ -245,8 +235,10 @@ class TerminalBufferTest {
         val expectedCell = CharacterCell(' ', 0, 0, emptySet())
         assertEquals(null, buffer.getAttributesFromScreenAt(-1, 0))
         assertCellEquals(expectedCell, buffer.getAttributesFromScreenAt(5, 0))
+        assertEquals(null, buffer.getAttributesFromScreenAt(maxColumns, 0))
         assertEquals(null, buffer.getAttributesFromScreenAt(0, -1))
-        assertEquals(null, buffer.getAttributesFromScreenAt(0, 1))
+        assertCellEquals(expectedCell, buffer.getAttributesFromScreenAt(0, 1))
+        assertEquals(null, buffer.getAttributesFromScreenAt(0, maxRows))
     }
 
     @Test
@@ -265,6 +257,7 @@ class TerminalBufferTest {
         val expectedCell = CharacterCell(' ', 0, 0, emptySet())
         assertEquals(null, buffer.getAttributesFromScrollbackAt(-1, 0))
         assertCellEquals(expectedCell, buffer.getAttributesFromScrollbackAt(6, 0))
+        assertEquals(null, buffer.getAttributesFromScrollbackAt(maxColumns, 0))
         assertEquals(null, buffer.getAttributesFromScrollbackAt(0, -1))
         assertEquals(null, buffer.getAttributesFromScrollbackAt(0, 1))
     }
@@ -280,7 +273,8 @@ class TerminalBufferTest {
     fun getLineAsStringFromScreenAt_outOfBoundsReturnsNull() {
         buffer.write("Hello, World!")
         assertEquals(null, buffer.getLineAsStringFromScreenAt(-1))
-        assertEquals(null, buffer.getLineAsStringFromScreenAt(1))
+        assertEquals(" ".repeat(maxColumns), buffer.getLineAsStringFromScreenAt(1))
+        assertEquals(null, buffer.getLineAsStringFromScreenAt(maxRows))
     }
 
     @Test
