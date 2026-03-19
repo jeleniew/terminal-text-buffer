@@ -28,7 +28,7 @@ class TerminalBuffer(
             scrollback = scrollback.drop(scrollback.size - scrollbackMaxSize)
                 .toMutableList()
         }
-        screen = screen.drop(1).toMutableList()
+        screen.removeAt(0)
         screen.add(TerminalLine(width, foreground, background, styles))
     }
 
